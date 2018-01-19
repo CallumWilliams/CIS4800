@@ -9,10 +9,12 @@ namespace CIS4800 {
 
 			DrawImage img = new DrawImage (100);
 
-			Vertex st = new Vertex (-0.4, 0.6, -1);
-			Vertex en = new Vertex (0.3, 0.7, 0.5);
+			Vertex st = new Vertex (-1, 1, -1);
+			Vertex en = new Vertex (1, -1, -1);
 
-			GraphicsMath.RasterizeEdge (st, en, img);
+			GraphicsMath.RasterizeEdge (st, en, ref img);
+
+			img.SaveImage ();
 
 		}
 	}
