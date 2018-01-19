@@ -22,6 +22,18 @@ namespace CIS4800 {
 
 		}
 
+		public int getWidth() {
+			return this.width;
+		}
+
+		public int getHeight() {
+			return this.height;
+		}
+
+		public Bitmap getBmp() {
+			return this.bmp;
+		}
+
 		/*
 		 * public void DrawPixelAt()
 		 * Parameters: x - horizontal cooordinate on image
