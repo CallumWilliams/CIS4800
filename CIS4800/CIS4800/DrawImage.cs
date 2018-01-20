@@ -43,6 +43,7 @@ namespace CIS4800 {
 		 * */
 		public void DrawPixelAt(int x, int y, Color r) {
 
+			Console.WriteLine (x + " " + y);
 			this.bmp.SetPixel (x, y, r);
 
 		}

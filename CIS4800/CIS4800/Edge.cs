@@ -11,6 +11,14 @@ namespace CIS4800 {
 			start = s;
 			end = e;
 		}
+
+		public Vertex getStart() {
+			return this.start;
+		}
+
+		public Vertex getEnd() {
+			return this.end;
+		}
 	}
 }
 

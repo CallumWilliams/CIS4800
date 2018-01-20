@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Drawing;
+using System.Collections;
 
 namespace CIS4800 {
 	
@@ -9,10 +9,12 @@ namespace CIS4800 {
 
 			DrawImage img = new DrawImage (100);
 
-			Vertex st = new Vertex (-1, 1, -1);
-			Vertex en = new Vertex (1, -1, -1);
+			//Vertex v1 = new Vertex (-1, -1, -1);
+			//Vertex v2 = new Vertex (-1, -1, 1);
 
-			GraphicsMath.RasterizeEdge (st, en, ref img);
+			//GraphicsMath.RasterizeEdge (new Edge (v1, v2), ref img);
+
+			GraphicsMath.DrawCube (ref img);
 
 			img.SaveImage ();
 
