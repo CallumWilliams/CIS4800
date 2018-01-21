@@ -181,6 +181,55 @@ namespace CIS4800 {
 
 		}
 
+		public static ArrayList setupPyramid() {
+
+			ArrayList ae = new ArrayList ();
+			//Top point
+			Vertex v1 = new Vertex (0, 1, 0);
+
+			//Connect top point to base
+			Vertex v2 = new Vertex (1, -1, 1);
+			ae.Add (new Edge (v1, v2));
+
+			v2 = new Vertex (-1, -1, 1);
+			ae.Add (new Edge (v1, v2));
+
+			v2 = new Vertex (1, -1, -1);
+			ae.Add (new Edge (v1, v2));
+
+			v2 = new Vertex (-1, -1, -1);
+			ae.Add (new Edge (v1, v2));
+
+			//Setup base of pyramid
+			v1 = new Vertex (-1, -1, -1);
+			v2 = new Vertex (1, -1, -1);
+			ae.Add (new Edge (v1, v2));
+
+			v1 = new Vertex (-1, -1, -1);
+			v2 = new Vertex (-1, -1, 1);
+			ae.Add (new Edge (v1, v2));
+
+			v1 = new Vertex (1, -1, 1);
+			v2 = new Vertex (-1, -1, 1);
+			ae.Add (new Edge (v1, v2));
+
+			v1 = new Vertex (1, -1, 1);
+			v2 = new Vertex (1, -1, -1);
+			ae.Add (new Edge (v1, v2));
+
+			return ae;
+
+		}
+
+		public static void DrawPyramid(ref DrawImage img) {
+
+			ArrayList e = setupPyramid ();
+			for (int i = 0; i < e.Count; i++) {
+				RasterizeEdge ((Edge)e [i], ref img);
+			}
+
+		}
+
 	}
 }
 
