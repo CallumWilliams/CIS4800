@@ -110,7 +110,92 @@ namespace CIS4800 {
 			
 		}
 
-		private static ArrayList SetupCube() {
+		private static ArrayList SetupCube(MeshType m, int n) {
+
+			ArrayList ae = new ArrayList ();
+
+			//Setup top surface
+			Vertex v1 = new Vertex (1, 1, 1);
+			Vertex v2 = new Vertex (1, 1, -1);
+			ae.Add (new Edge (v1, v2));
+
+			v1 = new Vertex (1, 1, 1);
+			v2 = new Vertex (-1, 1, 1);
+			ae.Add (new Edge (v1, v2));
+
+			v1 = new Vertex (1, 1, -1);
+			v2 = new Vertex (-1, 1, -1);
+			ae.Add (new Edge (v1, v2));
+
+			v1 = new Vertex (-1, 1, 1);
+			v2 = new Vertex (-1, 1, -1);
+			ae.Add (new Edge (v1, v2));
+
+			//Setup side surfaces
+			v1 = new Vertex (1, 1, 1);
+			v2 = new Vertex (1, -1, 1);
+			ae.Add (new Edge (v1, v2));
+
+			v1 = new Vertex (1, 1, -1);
+			v2 = new Vertex (1, -1, -1);
+			ae.Add (new Edge (v1, v2));
+
+			v1 = new Vertex (-1, 1, 1);
+			v2 = new Vertex (-1, -1, 1);
+			ae.Add (new Edge (v1, v2));
+
+			v1 = new Vertex (-1, 1, -1);
+			v2 = new Vertex (-1, -1, -1);
+			ae.Add (new Edge (v1, v2));
+
+			//Setup bottom surface
+			v1 = new Vertex (1, -1, 1);
+			v2 = new Vertex (1, -1, -1);
+			ae.Add (new Edge (v1, v2));
+
+			v1 = new Vertex (1, -1, 1);
+			v2 = new Vertex (-1, -1, 1);
+			ae.Add (new Edge (v1, v2));
+
+			v1 = new Vertex (1, -1, -1);
+			v2 = new Vertex (-1, -1, -1);
+			ae.Add (new Edge (v1, v2));
+
+			v1 = new Vertex (-1, -1, 1);
+			v2 = new Vertex (-1, -1, -1);
+			ae.Add (new Edge (v1, v2));
+
+			if (m == MeshType.Triangle) {
+
+				int[] constant_dimen = {-1, 1};
+				//add vertexes to make it an nxn
+				for (int i = 0; i <= n; i++) {
+					for (int j = 0; j <= n; j++) {
+						for (int k = 0; k < constant_dimen.Length; k++) {
+							v1 = new Vertex ((2 / n * i) - 1, (2 / n * j) - 1, constant_dimen[k]);
+							v2 = new Vertex ((2 / n * i) - 1, (2 / n * j), constant_dimen[k]);
+							ae.Add (new Edge (v1, v2));
+							v2 = new Vertex ((2 / n * i), (2 / n * j), constant_dimen[k]);
+							ae.Add (new Edge (v1, v2));
+							v1 = new Vertex ((2 / n * i) - 1, (2 / n * j), constant_dimen[k]);
+							ae.Add (new Edge (v1, v2));
+							v1 = new Vertex ((2 / n * i) - 1, (2 / n * j) - 1, constant_dimen[k]);
+							v2 = new Vertex ((2 / n * i), (2 / n * j) - 1, constant_dimen[k]);
+							ae.Add (new Edge (v1, v2));
+							v1 = new Vertex ((2 / n * i), (2 / n * j), constant_dimen [k]);
+							ae.Add (new Edge (v1, v2));
+						}
+
+					}
+				}
+				
+			}
+
+			return ae;
+
+		}
+
+		public static ArrayList SetupCube() {
 
 			ArrayList ae = new ArrayList ();
 
@@ -178,6 +263,15 @@ namespace CIS4800 {
 
 		}
 
+		public static void DrawCube(ref DrawImage img, MeshType m, int n) {
+
+			ArrayList e = SetupCube (m, n);
+			for (int i = 0; i < e.Count; i++) {
+				RasterizeEdge ((Edge)e [i], ref img);
+			}
+
+		}
+
 		public static ArrayList setupPyramid() {
 
 			ArrayList ae = new ArrayList ();
@@ -218,11 +312,15 @@ namespace CIS4800 {
 
 		}
 
-		public static void DrawPyramid(ref DrawImage img) {
+		public static void DrawPyramid(ref DrawImage img, MeshType m, int n) {
 
-			ArrayList e = setupPyramid ();
-			for (int i = 0; i < e.Count; i++) {
-				RasterizeEdge ((Edge)e [i], ref img);
+			if (m == MeshType.Polygon) {
+				ArrayList e = setupPyramid ();
+				for (int i = 0; i < e.Count; i++) {
+					RasterizeEdge ((Edge)e [i], ref img);
+				}
+			} else if (m == MeshType.Triangle) {
+
 			}
 
 		}
