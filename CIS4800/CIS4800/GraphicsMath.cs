@@ -80,9 +80,7 @@ namespace CIS4800 {
 						tmp += m;
 					}
 				} else {
-					Console.WriteLine (start_y_rast + " " + end_y_rast);
 					for (int i = start_y_rast; i >= end_y_rast; i--) {
-						Console.WriteLine ("at " + i);
 						d.DrawPixelAt((int)Math.Round(tmp), i, Color.FromArgb(255, 255, 0, 0));
 						tmp -= m;
 					}
@@ -175,7 +173,6 @@ namespace CIS4800 {
 
 			ArrayList e = SetupCube ();
 			for (int i = 0; i < e.Count; i++) {
-				Console.WriteLine (i);
 				RasterizeEdge ((Edge)e [i], ref img);
 			}
 
