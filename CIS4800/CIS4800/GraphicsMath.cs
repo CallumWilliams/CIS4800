@@ -21,11 +21,15 @@ namespace CIS4800 {
 				double ret = (dimen / 2) + (coord * (dimen / 2)) - 1;
 				if (ret < 0)
 					return 0;
+				if (ret >= dimen)
+					return dimen - 1;
 				return ret;
 			} else {//convert y
 				double ret = (dimen / 2) - (coord * (dimen / 2)) - 1;
 				if (ret < 0)
 					return 0;
+				if (ret >= dimen)
+					return dimen - 1;
 				return ret;
 			}
 
@@ -114,75 +118,90 @@ namespace CIS4800 {
 
 			ArrayList ae = new ArrayList ();
 
-			//Setup top surface
-			Vertex v1 = new Vertex (1, 1, 1);
-			Vertex v2 = new Vertex (1, 1, -1);
-			ae.Add (new Edge (v1, v2));
+			if (m == MeshType.Polygon) {
+				//Setup top surface
+				Vertex v1 = new Vertex (1, 1, 1);
+				Vertex v2 = new Vertex (1, 1, -1);
+				ae.Add (new Edge (v1, v2));
 
-			v1 = new Vertex (1, 1, 1);
-			v2 = new Vertex (-1, 1, 1);
-			ae.Add (new Edge (v1, v2));
+				v1 = new Vertex (1, 1, 1);
+				v2 = new Vertex (-1, 1, 1);
+				ae.Add (new Edge (v1, v2));
 
-			v1 = new Vertex (1, 1, -1);
-			v2 = new Vertex (-1, 1, -1);
-			ae.Add (new Edge (v1, v2));
+				v1 = new Vertex (1, 1, -1);
+				v2 = new Vertex (-1, 1, -1);
+				ae.Add (new Edge (v1, v2));
 
-			v1 = new Vertex (-1, 1, 1);
-			v2 = new Vertex (-1, 1, -1);
-			ae.Add (new Edge (v1, v2));
+				v1 = new Vertex (-1, 1, 1);
+				v2 = new Vertex (-1, 1, -1);
+				ae.Add (new Edge (v1, v2));
 
-			//Setup side surfaces
-			v1 = new Vertex (1, 1, 1);
-			v2 = new Vertex (1, -1, 1);
-			ae.Add (new Edge (v1, v2));
+				//Setup side surfaces
+				v1 = new Vertex (1, 1, 1);
+				v2 = new Vertex (1, -1, 1);
+				ae.Add (new Edge (v1, v2));
 
-			v1 = new Vertex (1, 1, -1);
-			v2 = new Vertex (1, -1, -1);
-			ae.Add (new Edge (v1, v2));
+				v1 = new Vertex (1, 1, -1);
+				v2 = new Vertex (1, -1, -1);
+				ae.Add (new Edge (v1, v2));
 
-			v1 = new Vertex (-1, 1, 1);
-			v2 = new Vertex (-1, -1, 1);
-			ae.Add (new Edge (v1, v2));
+				v1 = new Vertex (-1, 1, 1);
+				v2 = new Vertex (-1, -1, 1);
+				ae.Add (new Edge (v1, v2));
 
-			v1 = new Vertex (-1, 1, -1);
-			v2 = new Vertex (-1, -1, -1);
-			ae.Add (new Edge (v1, v2));
+				v1 = new Vertex (-1, 1, -1);
+				v2 = new Vertex (-1, -1, -1);
+				ae.Add (new Edge (v1, v2));
 
-			//Setup bottom surface
-			v1 = new Vertex (1, -1, 1);
-			v2 = new Vertex (1, -1, -1);
-			ae.Add (new Edge (v1, v2));
+				//Setup bottom surface
+				v1 = new Vertex (1, -1, 1);
+				v2 = new Vertex (1, -1, -1);
+				ae.Add (new Edge (v1, v2));
 
-			v1 = new Vertex (1, -1, 1);
-			v2 = new Vertex (-1, -1, 1);
-			ae.Add (new Edge (v1, v2));
+				v1 = new Vertex (1, -1, 1);
+				v2 = new Vertex (-1, -1, 1);
+				ae.Add (new Edge (v1, v2));
 
-			v1 = new Vertex (1, -1, -1);
-			v2 = new Vertex (-1, -1, -1);
-			ae.Add (new Edge (v1, v2));
+				v1 = new Vertex (1, -1, -1);
+				v2 = new Vertex (-1, -1, -1);
+				ae.Add (new Edge (v1, v2));
 
-			v1 = new Vertex (-1, -1, 1);
-			v2 = new Vertex (-1, -1, -1);
-			ae.Add (new Edge (v1, v2));
+				v1 = new Vertex (-1, -1, 1);
+				v2 = new Vertex (-1, -1, -1);
+				ae.Add (new Edge (v1, v2));
 
-			if (m == MeshType.Triangle) {
+			} else if (m == MeshType.Triangle) {
 
 				int[] constant_dimen = {-1, 1};
 				//add vertexes to make it an nxn
 				for (int i = 0; i <= n; i++) {
 					for (int j = 0; j <= n; j++) {
 						for (int k = 0; k < constant_dimen.Length; k++) {
-							v1 = new Vertex ((2 / n * i) - 1, (2 / n * j) - 1, constant_dimen[k]);
-							v2 = new Vertex ((2 / n * i) - 1, (2 / n * j), constant_dimen[k]);
+							double icoord = (double)((double)(2.0 / n * i) - 1.0);
+							double jcoord = (double)((double)(2.0 / n * j) - 1.0);
+							//View plane + back
+							Vertex v1 = new Vertex ((double)icoord, (double)jcoord, constant_dimen [k]);
+							Vertex v2 = new Vertex ((double)icoord + (2.0 / n), (double)jcoord, constant_dimen [k]);
 							ae.Add (new Edge (v1, v2));
-							v2 = new Vertex ((2 / n * i), (2 / n * j), constant_dimen[k]);
+							v2 = new Vertex ((double)icoord, (double)jcoord + (2.0 / n), constant_dimen [k]);
 							ae.Add (new Edge (v1, v2));
-							v1 = new Vertex ((2 / n * i) - 1, (2 / n * j), constant_dimen[k]);
+							v2 = new Vertex ((double)icoord + (2.0 / n), (double)jcoord + (2.0 / n), constant_dimen [k]);
 							ae.Add (new Edge (v1, v2));
-							v1 = new Vertex ((2 / n * i) - 1, (2 / n * j) - 1, constant_dimen[k]);
-							v2 = new Vertex ((2 / n * i), (2 / n * j) - 1, constant_dimen[k]);
+							//top + bottom
+							v1 = new Vertex ((double)icoord, constant_dimen [k], (double)jcoord);
+							v2 = new Vertex ((double)icoord + (2.0 / n), constant_dimen [k], (double)jcoord);
 							ae.Add (new Edge (v1, v2));
-							v1 = new Vertex ((2 / n * i), (2 / n * j), constant_dimen [k]);
+							v2 = new Vertex ((double)icoord, constant_dimen [k], (double)jcoord + (2.0 / n));
+							ae.Add (new Edge (v1, v2));
+							v2 = new Vertex ((double)icoord + (2.0 / n), constant_dimen [k], (double)jcoord + (2.0 / n));
+							ae.Add (new Edge (v1, v2));
+							//sides
+							v1 = new Vertex(constant_dimen[k], (double)icoord, (double)jcoord);
+							v2 = new Vertex (constant_dimen [k], (double)icoord + (2.0 / n), (double)jcoord);
+							ae.Add (new Edge (v1, v2));
+							v2 = new Vertex (constant_dimen [k], (double)icoord, (double)jcoord + (2.0 / n));
+							ae.Add (new Edge (v1, v2));
+							v2 = new Vertex (constant_dimen [k], (double)icoord + (2.0 / n), (double)jcoord + (2.0 / n));
 							ae.Add (new Edge (v1, v2));
 						}
 
