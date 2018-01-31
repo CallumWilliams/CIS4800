@@ -19,8 +19,10 @@ namespace CIS4800 {
 			//Vertex v2 = new Vertex (1, 1, -1);
 			//GraphicsMath.RasterizeEdge (new Edge (v1, v2), ref img);
 
+			Cube c = new Cube (1, 0, MeshType.Polygon, resolution);
+			c.Draw (ref img);
 			//GraphicsMath.DrawCube (ref img);
-			GraphicsMath.DrawCube (ref img, MeshType.Triangle, resolution);
+			//GraphicsMath.DrawCube (ref img, MeshType.Triangle, resolution);
 			//GraphicsMath.DrawPyramid (ref img, MeshType.Polygon, resolution);
 
 			img.SaveImage ();
