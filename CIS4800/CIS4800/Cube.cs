@@ -5,12 +5,12 @@ namespace CIS4800 {
 	
 	public class Cube {
 
-		float origin;
+		Vertex origin;
 		float length;
 
 		ArrayList edges;
 
-		public Cube (float len, float orig, MeshType m, int n) {
+		public Cube (float len, Vertex orig, MeshType m, int n) {
 
 			length = len;
 			origin = orig;
@@ -25,9 +25,9 @@ namespace CIS4800 {
 
 			ArrayList ae = new ArrayList ();
 
-			float x = origin + (length / 2);
-			float y = origin + (length / 2);
-			float z = origin + (length / 2);
+			double x = origin.getX () + (length / 2);
+			double y = origin.getY () + (length / 2);
+			double z = origin.getZ () + (length / 2);
 			//top surface
 			Vertex v1 = new Vertex (x, y, z);
 			Vertex v2 = new Vertex (x, y, z - length);
@@ -82,7 +82,7 @@ namespace CIS4800 {
 		private ArrayList setupEdges_Triangle(int n) {
 
 			ArrayList ae = new ArrayList ();
-			float[] const_dimen = { origin - (length / 2), origin + (length / 2) };
+			double[] const_dimen = { origin.getX () - (length / 2), origin.getX () + (length / 2) };
 
 			for (int i = 0; i <= n; i++) {
 				for (int j = 0; j <= n; j++) {
