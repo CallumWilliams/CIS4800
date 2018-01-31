@@ -90,7 +90,7 @@ namespace CIS4800 {
 						double icoord = (double)((double)(length / n * i) - (length/2));
 						double jcoord = (double)((double)(length / n * j) - (length/2));
 						//Front and back
-						Vertex v1 = new Vertex((double)icoord, (double)jcoord, const_dimen[k]);
+						Vertex v1 = new Vertex ((double)icoord, (double)jcoord, const_dimen[k]);
 						Vertex v2 = new Vertex ((double)icoord + (length / n), (double)jcoord, const_dimen [k]);
 						ae.Add (new Edge (v1, v2));
 						v2 = new Vertex((double)icoord, (double)jcoord + (length / n), const_dimen[k]);
@@ -144,9 +144,7 @@ namespace CIS4800 {
 			ArrayList e = this.edges;
 
 			for (int i = 0; i < e.Count; i++) {
-
 				GraphicsMath.RasterizeEdge ((Edge)e [i], ref img);
-
 			}
 
 		}

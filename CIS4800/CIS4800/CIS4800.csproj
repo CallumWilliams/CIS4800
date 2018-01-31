@@ -41,6 +41,7 @@
     <Compile Include="Edge.cs" />
     <Compile Include="GraphicsMath.cs" />
     <Compile Include="Cube.cs" />
+    <Compile Include="Pyramid.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
