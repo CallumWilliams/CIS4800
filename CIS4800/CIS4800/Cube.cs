@@ -8,7 +8,7 @@ namespace CIS4800 {
 		Vertex origin;
 		float length;
 
-		ArrayList edges;
+		public ArrayList edges;
 
 		public Cube (float len, Vertex orig, MeshType m, int n) {
 
@@ -139,12 +139,12 @@ namespace CIS4800 {
 
 		}
 
-		public void Draw(ref DrawImage img) {
+		public void Draw(ref DrawImage d) {
 
 			ArrayList e = this.edges;
 
 			for (int i = 0; i < e.Count; i++) {
-				GraphicsMath.RasterizeEdge ((Edge)e [i], ref img);
+				GraphicsMath.RasterizeEdge ((Edge)e [i], ref d);
 			}
 
 		}

@@ -9,7 +9,7 @@ namespace CIS4800 {
 		float height;
 		float base_width;
 
-		ArrayList edges;
+		public ArrayList edges;
 
 		public Pyramid (Vertex top, float h, float w) {
 
@@ -52,12 +52,12 @@ namespace CIS4800 {
 
 		}
 
-		public void Draw(ref DrawImage img) {
+		public void Draw(ref DrawImage d) {
 
 			ArrayList e = this.edges;
 
 			for (int i = 0; i < e.Count; i++) {
-				GraphicsMath.RasterizeEdge ((Edge)e [i], ref img);
+				GraphicsMath.RasterizeEdge ((Edge)e [i], ref d);
 			}
 
 		}

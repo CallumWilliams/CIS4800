@@ -43,6 +43,9 @@
     <Compile Include="Cube.cs" />
     <Compile Include="Pyramid.cs" />
     <Compile Include="Cylinder.cs" />
+    <Compile Include="ViewVolume.cs" />
+    <Compile Include="WorldSpace.cs" />
+    <Compile Include="Vector.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

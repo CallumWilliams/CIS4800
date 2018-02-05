@@ -12,7 +12,7 @@ namespace CIS4800 {
 		double height;
 		int resolution;
 
-		ArrayList edges;
+		public ArrayList edges;
 
 		public Cylinder (Vertex o, double r, double h, int res) {
 
@@ -66,16 +66,17 @@ namespace CIS4800 {
 
 		}
 
-		public void Draw(ref DrawImage img) {
+		public void Draw(ref DrawImage d) {
 
 			ArrayList e = this.edges;
 
 			for (int i = 0; i < e.Count; i++) {
-				GraphicsMath.RasterizeEdge ((Edge)e [i], ref img);
+				GraphicsMath.RasterizeEdge ((Edge)e [i], ref d);
 			}
 
 		}
 
 	}
+
 }
 

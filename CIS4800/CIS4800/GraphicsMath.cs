@@ -114,6 +114,50 @@ namespace CIS4800 {
 			
 		}
 
+		public Vector buildVectorFromPoints(Vertex p, Vertex q) {
+
+			double retX = q.getX () - p.getX ();
+			double retY = q.getY () - p.getY ();
+			double retZ = q.getZ () - p.getZ ();
+
+			return new Vector (retX, retY, retZ);
+
+		}
+
+		public double[,] getViewSpaceCoordinates(Vertex p, ViewVolume vv, WorldSpace w) {
+
+			/*MATRIX
+			 * U, V, N = basis of view volume
+			 * W = coords of view volume relative to world
+			 *  X  Y  Z  | x y z  1
+			 * [Xu Xv Xn | 1 0 0 -Xw]
+			 * [Yu Yv Yn | 0 1 0 -Yw]
+			 * [Zu Zv Zn | 0 0 1 -Zw]
+			*/
+
+			double[,] matrix = new double[3,7] { {0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 1, 0} };
+
+			//setup view volume coordinates relative to world space
+			matrix [0, 6] = vv.getViewPoint ().getX () * -1;
+			matrix [1, 6] = vv.getViewPoint ().getY () * -1;
+			matrix [2, 6] = vv.getViewPoint ().getY () * -1;
+
+			//add p (from world space)
+
+			//get normal
+			Vector N = buildVectorFromPoints (v, w);
+			matrix [0, 2] = N.getX ();
+			matrix [1, 2] = N.getY ();
+			matrix [2, 2] = N.getZ ();
+
+			
+
+			Console.WriteLine (matrix);
+
+			return matrix;
+
+		}
+
 	}
 }
 
