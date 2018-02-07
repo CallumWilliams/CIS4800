@@ -139,12 +139,16 @@ namespace CIS4800 {
 
 		}
 
-		public void Draw(ref DrawImage d) {
+		public void Draw(ref DrawImage d, double[,] matrix) {
 
 			ArrayList e = this.edges;
 
 			for (int i = 0; i < e.Count; i++) {
-				GraphicsMath.RasterizeEdge ((Edge)e [i], ref d);
+				Edge eNew = (Edge)e [i];
+				Vertex start = GraphicsMath.convertVertexToViewPlane (matrix, eNew.getStart ());
+				Vertex end = GraphicsMath.convertVertexToViewPlane (matrix, eNew.getEnd ());
+				eNew = new Edge (start, end);
+				GraphicsMath.RasterizeEdge (eNew, ref d);
 			}
 
 		}

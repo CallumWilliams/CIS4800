@@ -275,6 +275,18 @@ namespace CIS4800 {
 
 		}
 
+		public static Vertex convertVertexToViewPlane(double[,] m, Vertex p) {
+
+			double retX, retY, retZ;
+
+			retX = m [0, 3] * p.getX () + m [0, 4] * p.getY () + m [0, 5] * p.getZ () + m [0, 6];
+			retY = m [1, 3] * p.getX () + m [1, 4] * p.getY () + m [1, 5] * p.getZ () + m [1, 6];
+			retZ = m [2, 3] * p.getX () + m [2, 4] * p.getY () + m [2, 5] * p.getZ () + m [2, 6];
+
+			return new Vertex (retX, retY, retZ);
+
+		}
+
 	}
 }
 
