@@ -114,17 +114,125 @@ namespace CIS4800 {
 			
 		}
 
-		public Vector buildVectorFromPoints(Vertex p, Vertex q) {
+		/* 
+		 * public double[,] gaussJordanElimination()
+		 * Parameters: m[,] - matrix to be modified
+		 * Specifically made for the 3x7 matrix specified below
+		 */
+		public static double[,] gaussJordanElimination (double[,] m) {
 
-			double retX = q.getX () - p.getX ();
-			double retY = q.getY () - p.getY ();
-			double retZ = q.getZ () - p.getZ ();
+			//swap left-most 3x3 matrix diagonal where there are zero elements
+			for (int i = 0; i < 3; i++) {
 
-			return new Vector (retX, retY, retZ);
+				if (m [i, i] == 0) {//need to have a non-zero value; swap
+
+					//find column to swap
+					int swap;
+					for (swap = i; swap < 3; i++) {
+						if (m [swap, i] != 0)
+							break;//take this swap value and swap the rows
+					}
+					if (m [swap, i] == 0) {//error, no non-zero found in entire column
+						return null;
+					} else {//swap m[swap, i] and m[i, i]
+						double[] tmp = new double[7];
+						for (int j = 0; j < 7; j++) {
+							tmp[j] = m [swap, j];
+							m [swap, j] = m [i, j];
+							m [i, j] = tmp [j];
+						}
+					}
+
+				}
+
+			}
+
+			//Elimination steps for cell a
+
+			double mul1, mul2;
+			//matrix[1,0]
+			if (m [1, 0] != 0) {
+
+				mul1 = m [0, 0];
+				mul2 = m [1, 0];
+				for (int i = 0; i < 7; i++) {
+					m [1, i] = m [1, i] * mul1 - m [0, i] * mul2;
+				}
+
+			}
+
+			//matrix[2,0]
+			if (m [2, 0] != 0) {
+
+				mul1 = m [0, 0];
+				mul2 = m [2, 0];
+				for (int i = 0; i < 7; i++) {
+					m [2, i] = m [2, i] * mul1 - m [0, i] * mul2; 
+				}
+
+			}
+
+			//matrix[2,1]
+			if (m [2, 1] != 0) {
+
+				mul1 = m [1, 1];
+				mul2 = m [2, 1];
+				for (int i = 0; i < 7; i++) {
+					m [2, i] = m [2, i] * mul1 - m [1, i] * mul2;
+				}
+
+			}
+
+			//matrix[1,2]
+			if (m [1, 2] != 0) {
+
+				mul1 = m [2, 2];
+				mul2 = m [1, 2];
+				for (int i = 0; i < 7; i++) {
+					m [1, i] = m [1, i] * mul1 - m [2, i] * mul2;
+				}
+
+			}
+
+			//matrix[0,2]
+			if (m [0, 2] != 0) {
+
+				mul1 = m [2, 2];
+				mul2 = m [0, 2];
+				for (int i = 0; i < 7; i++) {
+					m [0, i] = m [0, i] * mul1 - m [2, i] * mul2;
+				}
+
+			}
+
+			//matrix[0,1]
+			if (m [0, 1] != 0) {
+
+				mul1 = m [1, 1];
+				mul2 = m [0, 1];
+				for (int i = 0; i < 7; i++) {
+					m [0, i] = m [0, i] * mul1 - m [1, i] * mul2;
+				}
+
+			}
+
+			//Check to see if diagonal is all = to 1
+			for (int i = 0; i < 3; i++) {
+				if (m [i, i] != 1) {
+					double tmp = m [i, i];
+					for (int j = 0; j < 7; j++) {
+						if (m [i, j] != 0) {
+							m [i, j] = (double)(m [i, j] / tmp);
+						}
+					}
+				}
+			}
+
+			return m;
 
 		}
 
-		public double[,] getViewSpaceCoordinates(Vertex p, ViewVolume vv, WorldSpace w) {
+		public static double[,]	getViewSpaceCoordinates(Vertex p, ViewVolume vv, WorldSpace w) {
 
 			/*MATRIX
 			 * U, V, N = basis of view volume
@@ -140,19 +248,28 @@ namespace CIS4800 {
 			//setup view volume coordinates relative to world space
 			matrix [0, 6] = vv.getViewPoint ().getX () * -1;
 			matrix [1, 6] = vv.getViewPoint ().getY () * -1;
-			matrix [2, 6] = vv.getViewPoint ().getY () * -1;
+			matrix [2, 6] = vv.getViewPoint ().getZ () * -1;
 
 			//add p (from world space)
 
 			//get normal
-			Vector N = buildVectorFromPoints (v, w);
-			matrix [0, 2] = N.getX ();
-			matrix [1, 2] = N.getY ();
-			matrix [2, 2] = N.getZ ();
+			vv.computeN(vv.getViewPoint(), w.getOrigin());
+			matrix [0, 2] = vv.getN ().getX ();
+			matrix [1, 2] = vv.getN ().getY ();
+			matrix [2, 2] = vv.getN ().getZ ();
 
-			
+			vv.computeV (w.getHeight ());
+			vv.computeU ();
 
-			Console.WriteLine (matrix);
+			matrix [0, 0] = vv.getU ().getX ();
+			matrix [1, 0] = vv.getU ().getY ();
+			matrix [2, 0] = vv.getU ().getZ ();
+
+			matrix [0, 1] = vv.getV ().getX ();
+			matrix [1, 1] = vv.getV ().getY ();
+			matrix [2, 1] = vv.getV ().getZ ();
+
+			gaussJordanElimination (matrix);
 
 			return matrix;
 

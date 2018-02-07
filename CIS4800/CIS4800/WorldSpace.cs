@@ -22,15 +22,15 @@ namespace CIS4800 {
 			return this.O;
 		}
 
-		public Vertex getWidth() {
+		public Vector getWidth() {
 			return this.I;
 		}
 
-		public Vertex getHeight() {
+		public Vector getHeight() {
 			return this.K;
 		}
 
-		public Vertex getDepth() {
+		public Vector getDepth() {
 			return this.J;
 		}
 

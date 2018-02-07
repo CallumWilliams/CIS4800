@@ -6,11 +6,11 @@ namespace CIS4800 {
 	public class Cube {
 
 		Vertex origin;
-		float length;
+		double length;
 
 		public ArrayList edges;
 
-		public Cube (float len, Vertex orig, MeshType m, int n) {
+		public Cube (double len, Vertex orig, MeshType m, int n) {
 
 			length = len;
 			origin = orig;
