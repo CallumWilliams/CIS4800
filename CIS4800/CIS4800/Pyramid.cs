@@ -6,12 +6,12 @@ namespace CIS4800 {
 	public class Pyramid {
 
 		Vertex top_vertex;
-		float height;
-		float base_width;
+		double height;
+		double base_width;
 
 		public ArrayList edges;
 
-		public Pyramid (Vertex top, float h, float w) {
+		public Pyramid (Vertex top, double h, double w) {
 
 			top_vertex = top;
 			height = h;
@@ -25,7 +25,7 @@ namespace CIS4800 {
 
 			ArrayList ae = new ArrayList ();
 
-			float wid = this.base_width / 2;
+			double wid = this.base_width / 2;
 			double base_x = this.top_vertex.getX ();
 			double base_y = this.top_vertex.getY ();
 			double base_z = this.top_vertex.getZ ();
@@ -52,12 +52,21 @@ namespace CIS4800 {
 
 		}
 
-		public void Draw(ref DrawImage d) {
+		public void Draw(ref DrawImage d, double[,] matrix, ViewVolume vv) {
 
 			ArrayList e = this.edges;
 
 			for (int i = 0; i < e.Count; i++) {
-				GraphicsMath.RasterizeEdge ((Edge)e [i], ref d);
+				Edge eNew = (Edge)e [i];
+				Vertex start = GraphicsMath.convertVertexToViewPlane (matrix, eNew.getStart ());
+				Vertex end = GraphicsMath.convertVertexToViewPlane (matrix, eNew.getEnd ());
+				if (vv.pointInViewVolume (start) && vv.pointInViewVolume (end)) {
+				start = vv.projectOntoVPWindow (start);
+				end = vv.projectOntoVPWindow (end);
+				eNew = new Edge (start, end);
+				GraphicsMath.RasterizeEdge (eNew, ref d, vv);
+				}
+
 			}
 
 		}

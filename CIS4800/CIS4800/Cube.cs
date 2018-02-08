@@ -19,6 +19,7 @@ namespace CIS4800 {
 				edges = setupEdges_Polygon ();
 			else
 				edges = setupEdges_Triangle (n);
+
 		}
 
 		private ArrayList setupEdges_Polygon() {
@@ -139,7 +140,7 @@ namespace CIS4800 {
 
 		}
 
-		public void Draw(ref DrawImage d, double[,] matrix) {
+		public void Draw(ref DrawImage d, double[,] matrix, ViewVolume vv) {
 
 			ArrayList e = this.edges;
 
@@ -147,8 +148,13 @@ namespace CIS4800 {
 				Edge eNew = (Edge)e [i];
 				Vertex start = GraphicsMath.convertVertexToViewPlane (matrix, eNew.getStart ());
 				Vertex end = GraphicsMath.convertVertexToViewPlane (matrix, eNew.getEnd ());
-				eNew = new Edge (start, end);
-				GraphicsMath.RasterizeEdge (eNew, ref d);
+				//if (vv.pointInViewVolume (start) && vv.pointInViewVolume (end)) {
+					//start = vv.projectOntoVPWindow (start);
+					//end = vv.projectOntoVPWindow (end);
+					eNew = new Edge (start, end);
+					GraphicsMath.RasterizeEdge (eNew, ref d, vv);
+			 //}
+
 			}
 
 		}

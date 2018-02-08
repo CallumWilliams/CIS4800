@@ -15,24 +15,29 @@ namespace CIS4800 {
 		 * and the bottom-right pixel is represented by (1, -1, -1).
 		 * Converts the position of the 3D pixel to the 2D plane position
 		 * */
-		public static double Convert3DToPlane(int dimen, double coord, int type) {
+		public static double[] Convert3DToPlane(int dimen, Vertex coord, ViewVolume v) {
+			
+			double[] ret = new double[2];
+			double h = v.getViewRange ();
 
-			if (type == 0) {//convert x
-				double ret = (dimen / 2) + (coord * (dimen / 2)) - 1;
-				if (ret < 0)
-					return 0;
-				if (ret >= dimen)
-					return dimen - 1;
-				return ret;
-			} else {//convert y
-				double ret = (dimen / 2) - (coord * (dimen / 2)) - 1;
-				if (ret < 0)
-					return 0;
-				if (ret >= dimen)
-					return dimen - 1;
-				return ret;
-			}
+			//ret[0] is the row, ret[1] is the column
+			ret[0] = (dimen / 2) - (coord.getY() * (dimen / 2)) - 0.5;
+			ret[1] = (dimen / 2) + (coord.getX() * (dimen / 2)) -0.5;
 
+			if (ret [0] < 0)
+				ret [0] = 0;
+			else if (ret [0] >= dimen)
+				ret [0] = dimen - 1;
+
+			if (ret [1] < 0)
+				ret [1] = 0;
+			else if (ret [1] >= dimen)
+				ret [1] = dimen - 1;
+
+			Console.WriteLine ("XConverted " + coord.getY () + " to " + ret [0]);
+			Console.WriteLine ("YConverted " + coord.getX () + " to " + ret [1]);
+
+			return ret;
 
 		}
 
@@ -43,18 +48,22 @@ namespace CIS4800 {
 		 * Uses Digital Differential Analyzer (DDA) algorithm to rasterize
 		 * the line. Simple way to decide which pixels represent an edge.
 		 * */
-		public static void RasterizeEdge(Edge e, ref DrawImage d) {
+		public static void RasterizeEdge(Edge e, ref DrawImage d, ViewVolume v) {
 
 			int start_x_rast, start_y_rast, end_x_rast, end_y_rast;
 			int x_dist, y_dist;
 			int line_type;
 
 			double s_x_img, s_y_img, e_x_img, e_y_img;
+			double[] s_new, e_new;
 
-			s_x_img = Convert3DToPlane (d.getWidth (), e.getStart().getX (), 0);
-			s_y_img = Convert3DToPlane (d.getHeight (), e.getStart().getY (), 1);
-			e_x_img = Convert3DToPlane (d.getWidth (), e.getEnd().getX (), 0);
-			e_y_img = Convert3DToPlane (d.getHeight (), e.getEnd().getY (), 1);
+			s_new = Convert3DToPlane (d.getHeight (), e.getStart (), v);
+			e_new = Convert3DToPlane (d.getHeight (), e.getEnd (), v);
+
+			s_x_img = s_new [1];
+			s_y_img = s_new [0];
+			e_x_img = e_new [1];
+			e_y_img = e_new [0];
 
 			start_x_rast = (int)Math.Round (s_x_img);
 			start_y_rast = (int)Math.Round (s_y_img);
@@ -119,7 +128,7 @@ namespace CIS4800 {
 		 * Parameters: m[,] - matrix to be modified
 		 * Specifically made for the 3x7 matrix specified below
 		 */
-		public static double[,] gaussJordanElimination (double[,] m) {
+		public static double[,] gaussJordanElimination (ref double[,] m) {
 
 			//swap left-most 3x3 matrix diagonal where there are zero elements
 			for (int i = 0; i < 3; i++) {
@@ -128,13 +137,16 @@ namespace CIS4800 {
 
 					//find column to swap
 					int swap;
-					for (swap = i; swap < 3; i++) {
-						if (m [swap, i] != 0)
+					Boolean found_swap = false;
+					for (swap = i; swap < 3; swap++) {
+						if (m [swap, i] != 0) {
+							found_swap = true;
 							break;//take this swap value and swap the rows
+						}
 					}
-					if (m [swap, i] == 0) {//error, no non-zero found in entire column
+					if (!found_swap) {//error, no non-zero found in entire column
 						return null;
-					} else {//swap m[swap, i] and m[i, i]
+					} else {//swap m[swap] and m[i]
 						double[] tmp = new double[7];
 						for (int j = 0; j < 7; j++) {
 							tmp[j] = m [swap, j];
@@ -147,7 +159,7 @@ namespace CIS4800 {
 
 			}
 
-			//Elimination steps for cell a
+			//Elimination steps for required cells
 
 			double mul1, mul2;
 			//matrix[1,0]
@@ -221,9 +233,7 @@ namespace CIS4800 {
 				if (m [i, i] != 1) {
 					double tmp = m [i, i];
 					for (int j = 0; j < 7; j++) {
-						if (m [i, j] != 0) {
-							m [i, j] = (double)(m [i, j] / tmp);
-						}
+						m [i, j] = (double)(m [i, j] / tmp);
 					}
 				}
 			}
@@ -232,7 +242,7 @@ namespace CIS4800 {
 
 		}
 
-		public static double[,]	getViewSpaceCoordinates(Vertex p, ViewVolume vv, WorldSpace w) {
+		public static double[,]	getViewSpaceCoordinates(ViewVolume vv, WorldSpace w) {
 
 			/*MATRIX
 			 * U, V, N = basis of view volume
@@ -249,8 +259,6 @@ namespace CIS4800 {
 			matrix [0, 6] = vv.getViewPoint ().getX () * -1;
 			matrix [1, 6] = vv.getViewPoint ().getY () * -1;
 			matrix [2, 6] = vv.getViewPoint ().getZ () * -1;
-
-			//add p (from world space)
 
 			//get normal
 			vv.computeN(vv.getViewPoint(), w.getOrigin());
@@ -269,7 +277,7 @@ namespace CIS4800 {
 			matrix [1, 1] = vv.getV ().getY ();
 			matrix [2, 1] = vv.getV ().getZ ();
 
-			gaussJordanElimination (matrix);
+			gaussJordanElimination (ref matrix);
 
 			return matrix;
 
