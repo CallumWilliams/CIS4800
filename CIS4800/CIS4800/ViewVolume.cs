@@ -12,12 +12,12 @@ namespace CIS4800 {
 		double f;//far plane
 		double h;//Left/right view range
 
-		public ViewVolume (double dist, double theta, double omega, double d, double f, double h) {
+		public ViewVolume (double dist, double azimuth, double elevation, double d, double f, double h) {
 
 			double retX, retY, retZ;
-			retX = dist * Math.Cos (omega) * Math.Cos (theta);
-			retY = dist * Math.Cos (omega) * Math.Sin (theta);
-			retZ = dist * Math.Sin (omega);
+			retX = dist * Math.Cos (elevation) * Math.Cos (azimuth);
+			retY = dist * Math.Cos (elevation) * Math.Sin (azimuth);
+			retZ = dist * Math.Sin (elevation);
 
 			this.viewPoint = new Vertex (retX, retY, retZ);
 			this.d = d;
@@ -28,7 +28,7 @@ namespace CIS4800 {
 
 		public ViewVolume (Vertex vp, double d, double f, double h) {
 
-			viewPoint = vp;
+			this.viewPoint = vp;
 			this.d = d;
 			this.f = f;
 			this.h = h;
@@ -67,12 +67,15 @@ namespace CIS4800 {
 
 			double retX, retY, retZ;
 
-			//V x N
-			retX = (V.getY () * N.getZ () - N.getY () * V.getZ ());
-			retY = (V.getZ () * N.getX () - N.getZ () * V.getX ());
-			retZ = (V.getX () * N.getY () - N.getX () * V.getY ());
+			//N x V
+			retX = (N.getY () * V.getZ () - V.getY () * N.getZ ());
+			retY = (N.getZ () * V.getX () - V.getZ () * N.getX ());
+			retZ = (N.getX () * V.getY () - V.getX () * N.getY ());
 
-			this.U = new Vector (retX, retY, retZ);
+			Vector v = new Vector (retX, retY, retZ);
+			v = GraphicsMath.normalizeVector (v);
+
+			this.U = v;
 
 		}
 
@@ -91,7 +94,10 @@ namespace CIS4800 {
 			retY = a * N.getY () + b * k.getY ();
 			retZ = a * N.getZ () + b * k.getZ ();
 
-			this.V = new Vector (retX, retY, retZ);
+			Vector v = new Vector (retX, retY, retZ);
+			v = GraphicsMath.normalizeVector (v);
+
+			this.V = v;
 
 		}
 
@@ -101,9 +107,10 @@ namespace CIS4800 {
 			double retY = q.getY () - p.getY ();
 			double retZ = q.getZ () - p.getZ ();
 
-			
+			Vector v = new Vector (retX, retY, retZ);
+			v = GraphicsMath.normalizeVector (v);
 
-			this.N = new Vector (retX, retY, retZ);
+			this.N = v;
 
 		}
 
@@ -115,19 +122,16 @@ namespace CIS4800 {
 			y = p.getY ();
 			z = p.getZ ();
 
-			double ztmp = z;
-			if (z < 0)
-				ztmp *= -1;
-
-			double div = this.h / this.d;
+			double div = (double)(this.h / this.d);
 
 			if ((x >= (-1 * div * z)) && (x <= (div * z))) {//fits x
 
 				if ((y >= (-1 * div * z)) && (y <= (div * z))) {//fits y
 
-					if ((z >= this.d) && (z <= this.f)) {
+					//if ((z >= this.d) && (z <= this.f)) {
+					//Console.WriteLine(x + ", " + y + ", " + z + " are in the view volume");
 						return true;
-					}
+					//}
 
 				}
 
@@ -145,14 +149,10 @@ namespace CIS4800 {
 			x = p.getX ();
 			y = p.getY ();
 			z = p.getZ ();
-			if (z == 0)
-				z = 0.00001;
 
 			_x = (x / z) * this.d;
 			_y = (y / z) * this.d;
 			_z = this.d;
-
-			Console.WriteLine (x + ", " + y + ", " + z + " to " + _x + ", " + _y + ", " + _z);
 
 			return new Vertex (_x, _y, _z);
 

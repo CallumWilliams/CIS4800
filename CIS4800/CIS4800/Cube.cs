@@ -1,30 +1,28 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace CIS4800 {
 	
-	public class Cube {
+	public class Cube : Shape {
 
 		Vertex origin;
 		double length;
 
-		public ArrayList edges;
-
-		public Cube (double len, Vertex orig, MeshType m, int n) {
+		public Cube (double len, Vertex orig, MeshType m, int n) : base() {
 
 			length = len;
 			origin = orig;
 
 			if (m == MeshType.Polygon)
-				edges = setupEdges_Polygon ();
+				base.setEdges (setupEdges_Polygon ());
 			else
-				edges = setupEdges_Triangle (n);
+				base.setEdges (setupEdges_Triangle (n));
 
 		}
 
-		private ArrayList setupEdges_Polygon() {
+		private List<Edge> setupEdges_Polygon() {
 
-			ArrayList ae = new ArrayList ();
+			List<Edge> ae = new List<Edge> ();
 
 			double x = origin.getX () + (length / 2);
 			double y = origin.getY () + (length / 2);
@@ -80,9 +78,9 @@ namespace CIS4800 {
 
 		}
 
-		private ArrayList setupEdges_Triangle(int n) {
+		private List<Edge> setupEdges_Triangle(int n) {
 
-			ArrayList ae = new ArrayList ();
+			List<Edge> ae = new List<Edge> ();
 			double[] const_dimen = { origin.getX () - (length / 2), origin.getX () + (length / 2) };
 
 			for (int i = 0; i <= n; i++) {
@@ -137,25 +135,6 @@ namespace CIS4800 {
 			}
 
 			return ae;
-
-		}
-
-		public void Draw(ref DrawImage d, double[,] matrix, ViewVolume vv) {
-
-			ArrayList e = this.edges;
-
-			for (int i = 0; i < e.Count; i++) {
-				Edge eNew = (Edge)e [i];
-				Vertex start = GraphicsMath.convertVertexToViewPlane (matrix, eNew.getStart ());
-				Vertex end = GraphicsMath.convertVertexToViewPlane (matrix, eNew.getEnd ());
-				//if (vv.pointInViewVolume (start) && vv.pointInViewVolume (end)) {
-					//start = vv.projectOntoVPWindow (start);
-					//end = vv.projectOntoVPWindow (end);
-					eNew = new Edge (start, end);
-					GraphicsMath.RasterizeEdge (eNew, ref d, vv);
-			 //}
-
-			}
 
 		}
 

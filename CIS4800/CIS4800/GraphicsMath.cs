@@ -21,8 +21,8 @@ namespace CIS4800 {
 			double h = v.getViewRange ();
 
 			//ret[0] is the row, ret[1] is the column
-			ret[0] = (dimen / 2) - (coord.getY() * (dimen / 2)) - 0.5;
-			ret[1] = (dimen / 2) + (coord.getX() * (dimen / 2)) -0.5;
+			ret [0] = ((dimen / 2) - 0.5) - (coord.getY () * (dimen / (2 * h)));
+			ret [1] = ((dimen / 2) - 0.5) + (coord.getX () * (dimen / (2 * h)));
 
 			if (ret [0] < 0)
 				ret [0] = 0;
@@ -34,17 +34,14 @@ namespace CIS4800 {
 			else if (ret [1] >= dimen)
 				ret [1] = dimen - 1;
 
-			Console.WriteLine ("XConverted " + coord.getY () + " to " + ret [0]);
-			Console.WriteLine ("YConverted " + coord.getX () + " to " + ret [1]);
-
 			return ret;
 
 		}
 
 		/* public void RasterizeEdge()
-		 * Parameters: s - starting Vertex
-		 * 			   e - ending Vertex
+		 * Parameters: e - edge to draw
 		 * 			   d - object for drawing the output to an image
+		 * 			   v - ViewVolume in use
 		 * Uses Digital Differential Analyzer (DDA) algorithm to rasterize
 		 * the line. Simple way to decide which pixels represent an edge.
 		 * */
@@ -60,10 +57,10 @@ namespace CIS4800 {
 			s_new = Convert3DToPlane (d.getHeight (), e.getStart (), v);
 			e_new = Convert3DToPlane (d.getHeight (), e.getEnd (), v);
 
-			s_x_img = s_new [1];
-			s_y_img = s_new [0];
-			e_x_img = e_new [1];
-			e_y_img = e_new [0];
+			s_x_img = s_new [0];
+			s_y_img = s_new [1];
+			e_x_img = e_new [0];
+			e_y_img = e_new [1];
 
 			start_x_rast = (int)Math.Round (s_x_img);
 			start_y_rast = (int)Math.Round (s_y_img);
@@ -76,7 +73,7 @@ namespace CIS4800 {
 			if (Math.Abs(x_dist) <= Math.Abs(y_dist)) {
 				line_type = 0;//vertical
 			} else {
-				line_type = 1;//horizontal
+				line_type = 1;//horizon+666tal
 			}
 			
 			if (line_type == 0) {//vertical
@@ -128,9 +125,10 @@ namespace CIS4800 {
 		 * Parameters: m[,] - matrix to be modified
 		 * Specifically made for the 3x7 matrix specified below
 		 */
-		public static double[,] gaussJordanElimination (ref double[,] m) {
+		public static double[,] gaussJordanElimination (double[,] m) {
 
 			//swap left-most 3x3 matrix diagonal where there are zero elements
+
 			for (int i = 0; i < 3; i++) {
 
 				if (m [i, i] == 0) {//need to have a non-zero value; swap
@@ -247,6 +245,8 @@ namespace CIS4800 {
 			/*MATRIX
 			 * U, V, N = basis of view volume
 			 * W = coords of view volume relative to world
+			 * X, Y, Z = coordinates of point in view space
+			 * x, y, z = coordinates of point in world space
 			 *  X  Y  Z  | x y z  1
 			 * [Xu Xv Xn | 1 0 0 -Xw]
 			 * [Yu Yv Yn | 0 1 0 -Yw]
@@ -277,13 +277,13 @@ namespace CIS4800 {
 			matrix [1, 1] = vv.getV ().getY ();
 			matrix [2, 1] = vv.getV ().getZ ();
 
-			gaussJordanElimination (ref matrix);
+			matrix = gaussJordanElimination (matrix);
 
 			return matrix;
 
 		}
 
-		public static Vertex convertVertexToViewPlane(double[,] m, Vertex p) {
+		public static Vertex convertVertexToViewVolume(double[,] m, Vertex p) {
 
 			double retX, retY, retZ;
 
@@ -292,6 +292,31 @@ namespace CIS4800 {
 			retZ = m [2, 3] * p.getX () + m [2, 4] * p.getY () + m [2, 5] * p.getZ () + m [2, 6];
 
 			return new Vertex (retX, retY, retZ);
+
+		}
+
+		public static Vector normalizeVector(Vector v) {
+
+			double retX = v.getX ();
+			double retY = v.getY ();
+			double retZ = v.getZ ();
+
+			double square = Math.Sqrt ((retX * retX) + (retY * retY) + (retZ * retZ));
+			retX = retX * (1 / square);
+			retY = retY * (1 / square);
+			retZ = retZ * (1 / square);
+
+			return new Vector (retX, retY, retZ);
+
+		}
+
+		public static double calculateDistance(Vertex p, Vertex q) {
+
+			double dist = 0;
+
+			dist = Math.Sqrt ((q.getX () - p.getX ()) + (q.getY () - p.getY ()) + (q.getZ () - p.getZ ()));
+
+			return dist;
 
 		}
 

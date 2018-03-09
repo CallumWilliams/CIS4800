@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace CIS4800 {
 
-	public class Cylinder {
+	public class Cylinder : Shape {
 
 		private const int MAX_RESOLUTION = 20;
 
@@ -12,9 +12,7 @@ namespace CIS4800 {
 		double height;
 		int resolution;
 
-		public ArrayList edges;
-
-		public Cylinder (Vertex o, double r, double h, int res) {
+		public Cylinder (Vertex o, double r, double h, int res) : base() {
 
 			origin = o;
 			radius = r;
@@ -24,13 +22,13 @@ namespace CIS4800 {
 			if (resolution < MAX_RESOLUTION)
 				resolution = MAX_RESOLUTION;
 
-			edges = setupCylinder_Polygon ();
+			base.setEdges (setupCylinder_Polygon ());
 
 		}
 
-		private ArrayList setupCylinder_Polygon() {
+		private List<Edge> setupCylinder_Polygon() {
 
-			ArrayList ae = new ArrayList ();
+			List<Edge> ae = new List<Edge> ();
 
 			//top/bottom of cylinder
 			for (int i = 0; i <= this.resolution; i++) {
@@ -63,25 +61,6 @@ namespace CIS4800 {
 			}
 
 			return ae;
-
-		}
-
-		public void Draw(ref DrawImage d, double[,] matrix, ViewVolume vv) {
-
-			ArrayList e = this.edges;
-
-			for (int i = 0; i < e.Count; i++) {
-				Edge eNew = (Edge)e [i];
-				Vertex start = GraphicsMath.convertVertexToViewPlane (matrix, eNew.getStart ());
-				Vertex end = GraphicsMath.convertVertexToViewPlane (matrix, eNew.getEnd ());
-				if (vv.pointInViewVolume (start) && vv.pointInViewVolume (end)) {
-					start = vv.projectOntoVPWindow (start);
-					end = vv.projectOntoVPWindow (end);
-					eNew = new Edge (start, end);
-					GraphicsMath.RasterizeEdge (eNew, ref d, vv);
-				}
-
-			}
 
 		}
 
