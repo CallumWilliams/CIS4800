@@ -12,14 +12,19 @@ namespace CIS4800 {
 		double d;//near plane
 		double h;//Left/right view range
 
-		public ViewVolume (Vertex vp, double f, double d, double h) {
+		public ViewVolume(double dist, double azimuth, double elevation, double near, double far, double range) {
 
-			viewPoint = vp;
-			this.f = f;
-			this.d = d;
-			this.h = h;
+			double x = dist * Math.Cos (elevation) * Math.Cos (azimuth);
+			double y = dist * Math.Cos (elevation) * Math.Sin (azimuth);
+			double z = dist * Math.Sin (elevation);
+
+			viewPoint = new Vertex (x, y, z);
+			f = far;
+			d = near;
+			h = range;
 
 		}
+		
 
 		public Vertex getViewPoint () {
 			return this.viewPoint;
@@ -57,7 +62,10 @@ namespace CIS4800 {
 			retY = (N.getZ () * V.getX () - N.getX () * V.getZ ());
 			retZ = (N.getX () * V.getY () - N.getY () * V.getX ());
 
-			this.U = new Vector (retX, retY, retZ);
+			Vector v = new Vector (retX, retY, retZ);
+			v = GraphicsMath.normalizeVector (v);
+
+			this.U = v;
 
 		}
 
@@ -79,7 +87,10 @@ namespace CIS4800 {
 			retY = a * N.getY () + b * k.getY ();
 			retZ = a * N.getZ () + b * k.getZ ();
 
-			this.V = new Vector (retX, retY, retZ);
+			Vector v = new Vector (retX, retY, retZ);
+			v = GraphicsMath.normalizeVector (v);
+
+			this.V = v;
 
 		}
 
@@ -89,15 +100,46 @@ namespace CIS4800 {
 			double retY = q.getY () - p.getY ();
 			double retZ = q.getZ () - p.getZ ();
 
-			//create as unit vector
-			/*if (retX != 0)
-				retX = retX / Math.Abs (retX);
-			if (retY != 0)
-				retY = retY / Math.Abs (retY);
-			if (retZ != 0)
-				retZ = retZ / Math.Abs (retZ);
-			*/
-			this.N = new Vector (retX, retY, retZ);
+			Vector v = new Vector (retX, retY, retZ);
+			v = GraphicsMath.normalizeVector (v);
+
+			this.N = v;
+
+		}
+
+		public Boolean pointIsInVV(Vertex p) {
+
+			double x = p.getX ();
+			double y = p.getY ();
+			double z = p.getZ ();
+
+			double div = (double)(this.h / this.d);
+
+			if ((x >= (-1 * div * z)) && (x <= (div * z))) {
+
+				if ((y >= (-1 * div * z)) && (y <= (div * z))) {
+
+					return true;
+
+				}
+
+			}
+
+			return false;
+
+		}
+
+		public Vertex projectOntoVPWindow(Vertex p) {
+
+			double x = p.getX ();
+			double y = p.getY ();
+			double z = p.getZ ();
+
+			double _x = (x / z) * this.d;
+			double _y = (y / z) * this.d;
+			double _z = this.d;
+
+			return new Vertex (_x, _y, _z);
 
 		}
 

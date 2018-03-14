@@ -68,11 +68,11 @@ namespace CIS4800 {
 
 		public void Draw(ref DrawImage d) {
 
-			ArrayList e = this.edges;
+			//ArrayList e = this.edges;
 
-			for (int i = 0; i < e.Count; i++) {
-				GraphicsMath.RasterizeEdge ((Edge)e [i], ref d);
-			}
+			//for (int i = 0; i < e.Count; i++) {
+			//	GraphicsMath.RasterizeEdge ((Edge)e [i], ref d);
+			//}
 
 		}
 

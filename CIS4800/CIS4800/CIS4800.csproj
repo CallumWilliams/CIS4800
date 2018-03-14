@@ -46,6 +46,7 @@
     <Compile Include="ViewVolume.cs" />
     <Compile Include="WorldSpace.cs" />
     <Compile Include="Vector.cs" />
+    <Compile Include="Shape.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

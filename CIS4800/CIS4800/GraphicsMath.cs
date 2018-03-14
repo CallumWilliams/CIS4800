@@ -15,24 +15,27 @@ namespace CIS4800 {
 		 * and the bottom-right pixel is represented by (1, -1, -1).
 		 * Converts the position of the 3D pixel to the 2D plane position
 		 * */
-		public static double Convert3DToPlane(int dimen, double coord, int type) {
+		public static double[] Convert3DToPlane(int dimen, Vertex p, ViewVolume vv) {
 
-			if (type == 0) {//convert x
-				double ret = (dimen / 2) + (coord * (dimen / 2)) - 1;
-				if (ret < 0)
-					return 0;
-				if (ret >= dimen)
-					return dimen - 1;
-				return ret;
-			} else {//convert y
-				double ret = (dimen / 2) - (coord * (dimen / 2)) - 1;
-				if (ret < 0)
-					return 0;
-				if (ret >= dimen)
-					return dimen - 1;
-				return ret;
-			}
+			double[] ret = new double[2];
+			double h = vv.getViewRange ();
 
+			//convert row
+			ret [0] = (dimen / 2) - 0.5 - (p.getY () * (dimen / 2 * h));
+			//convert column
+			ret [1] = (dimen / 2) - 0.5 - (p.getX () * (dimen / 2 * h));
+
+			if (ret [0] < 0)
+				ret [0] = 0;
+			else if (ret [0] > dimen - 1)
+				ret [0] = dimen - 1;
+
+			if (ret [1] < 0)
+				ret [1] = 0;
+			else if (ret [1] > dimen - 1)
+				ret [1] = dimen - 1;
+
+			return ret;
 
 		}
 
@@ -43,23 +46,22 @@ namespace CIS4800 {
 		 * Uses Digital Differential Analyzer (DDA) algorithm to rasterize
 		 * the line. Simple way to decide which pixels represent an edge.
 		 * */
-		public static void RasterizeEdge(Edge e, ref DrawImage d) {
+		public static void RasterizeEdge(Edge e, ref DrawImage d, ViewVolume vv) {
 
 			int start_x_rast, start_y_rast, end_x_rast, end_y_rast;
 			int x_dist, y_dist;
 			int line_type;
 
-			double s_x_img, s_y_img, e_x_img, e_y_img;
+			double[] s_img;
+			double[] e_img;
 
-			s_x_img = Convert3DToPlane (d.getWidth (), e.getStart().getX (), 0);
-			s_y_img = Convert3DToPlane (d.getHeight (), e.getStart().getY (), 1);
-			e_x_img = Convert3DToPlane (d.getWidth (), e.getEnd().getX (), 0);
-			e_y_img = Convert3DToPlane (d.getHeight (), e.getEnd().getY (), 1);
+			s_img = Convert3DToPlane (d.getWidth (), e.getStart (), vv);
+			e_img = Convert3DToPlane (d.getWidth (), e.getEnd (), vv);
 
-			start_x_rast = (int)Math.Round (s_x_img);
-			start_y_rast = (int)Math.Round (s_y_img);
-			end_x_rast = (int)Math.Round (e_x_img);
-			end_y_rast = (int)Math.Round (e_y_img);
+			start_x_rast = (int)Math.Round (s_img [0]);
+			start_y_rast = (int)Math.Round (s_img [1]);
+			end_x_rast = (int)Math.Round (e_img [0]);
+			end_y_rast = (int)Math.Round (e_img [1]);
 
 			x_dist = end_x_rast - start_x_rast;
 			y_dist = end_y_rast - start_y_rast;
@@ -232,7 +234,7 @@ namespace CIS4800 {
 
 		}
 
-		public static double[,]	getViewSpaceCoordinates(Vertex p, ViewVolume vv, WorldSpace w) {
+		public static double[,]	getViewSpaceCoordinates(ViewVolume vv, WorldSpace w) {
 
 			/*MATRIX
 			 * U, V, N = basis of view volume
@@ -272,6 +274,21 @@ namespace CIS4800 {
 			gaussJordanElimination (matrix);
 
 			return matrix;
+
+		}
+
+		public static Vector normalizeVector(Vector v) {
+
+			double retX = v.getX ();
+			double retY = v.getY ();
+			double retZ = v.getZ ();
+
+			double square = Math.Sqrt ((retX * retX) + (retY * retY) + (retZ * retZ));
+			retX = retX * (1 / square);
+			retY = retY * (1 / square);
+			retZ = retZ * (1 / square);
+
+			return new Vector (retX, retY, retZ);
 
 		}
 
