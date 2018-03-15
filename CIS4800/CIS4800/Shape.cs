@@ -5,36 +5,47 @@ namespace CIS4800 {
 	
 	public class Shape {
 
-		private List<Edge> edges;
+		private List<Surface> surfaces;
 
 		public Shape () {
 
-			edges = new List<Edge> ();
+			surfaces = new List<Surface> ();
 
 		}
 
-		public List<Edge> getEdges() {
-			return this.edges;
+		public List<Surface> getSurfaces() {
+			return this.surfaces;
 		}
 
-		public void setEdges(List<Edge> e) {
-			this.edges = e;
+		public void setSurfaces(List<Surface> e) {
+			this.surfaces = e;
 		}
 
 		public void Draw(ref DrawImage d, double[,] matrix, ViewVolume vv) {
 
-			List<Edge> e = this.edges;
+			List<Surface> surf = this.surfaces;
 
-			for (int i = 0; i < e.Count; i++) {
-				Edge eNew = (Edge)e [i];
-				Vertex start = GraphicsMath.convertVertexToViewPlane (matrix, eNew.getStart ());
-				Vertex end = GraphicsMath.convertVertexToViewPlane (matrix, eNew.getEnd ());
-				if (vv.pointIsInVV (start) && vv.pointIsInVV (end)) {
-					start = vv.projectOntoVPWindow (start);
-					end = vv.projectOntoVPWindow (end);
-					eNew = new Edge (start, end);
-					GraphicsMath.RasterizeEdge (eNew, ref d, vv);
+			for (int i = 0; i < surfaces.Count; i++) {
+
+				Surface s = surf [i];
+				List<Edge> e = s.getEdges ();
+
+				for (int j = 0; j < e.Count; j++) {
+
+					Edge eNew = (Edge)e [j];
+					Console.WriteLine ("Got (", eNew.getStart ().getX (), ", ", eNew.getStart ().getY (), ", ", eNew.getStart ().getZ (), ") to (", eNew.getEnd ().getX (), ", ", eNew.getEnd ().getY (), ", ", eNew.getEnd ().getZ (), ")");
+					Vertex start = GraphicsMath.convertVertexToViewVolume (matrix, eNew.getStart ());
+					Vertex end = GraphicsMath.convertVertexToViewVolume (matrix, eNew.getEnd ());
+					Console.WriteLine("Drawing (", start.getX() , ", " , start.getY() , ", ", start.getZ() , ") to (" , end.getX() , ", " , end.getY() , ", ", end.getZ(), ")");
+					if (vv.pointIsInVV (start) && vv.pointIsInVV (end)) {
+						start = vv.projectOntoVPWindow (start);
+						end = vv.projectOntoVPWindow (end);
+						eNew = new Edge (start, end);
+						GraphicsMath.RasterizeEdge (eNew, ref d, vv);
+					}
+
 				}
+
 			}
 
 		}

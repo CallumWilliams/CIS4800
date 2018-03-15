@@ -14,18 +14,20 @@ namespace CIS4800 {
 			origin = orig;
 
 			if (m == MeshType.Polygon)
-				base.setEdges(setupEdges_Polygon());
+				base.setSurfaces(setupEdges_Polygon());
 			else
-				base.setEdges(setupEdges_Triangle(n));
+				base.setSurfaces(setupEdges_Triangle(n));
 		}
 
-		private List<Edge> setupEdges_Polygon() {
+		private List<Surface> setupEdges_Polygon() {
 
+			List<Surface> s = new List<Surface> ();
 			List<Edge> ae = new List<Edge> ();
 
 			double x = origin.getX () + (length / 2);
 			double y = origin.getY () + (length / 2);
 			double z = origin.getZ () + (length / 2);
+
 			//top surface
 			Vertex v1 = new Vertex (x, y, z);
 			Vertex v2 = new Vertex (x, y, z - length);
@@ -40,23 +42,72 @@ namespace CIS4800 {
 
 			v2 = new Vertex (x - length, y, z);
 			ae.Add (new Edge (v1, v2));
+			s.Add (new Surface (ae));
+			ae = new List<Edge> ();
 
-			//side surfaces
-			v1 = new Vertex(x, y, z);
+			//side 1
+			v1 = new Vertex (x, y, z);
 			v2 = new Vertex (x, y - length, z);
 			ae.Add (new Edge (v1, v2));
 
-			v1 = new Vertex (x, y, z - length);
-			v2 = new Vertex (x, y - length, z - length);
+			v2 = new Vertex (x, y, z - length);
 			ae.Add (new Edge (v1, v2));
 
-			v1 = new Vertex (x - length, y, z);
-			v2 = new Vertex (x - length, y - length, z);
+			v1 = new Vertex (x, y - length, z - length);
 			ae.Add (new Edge (v1, v2));
 
+			v2 = new Vertex (x, y - length, z);
+			ae.Add (new Edge (v1, v2));
+			s.Add (new Surface (ae));
+			ae = new List<Edge> ();
+
+			//side 2
+			v1 = new Vertex (x, y, z);
+			v2 = new Vertex (x, y - length, z);
+			ae.Add (new Edge (v1, v2));
+
+			v2 = new Vertex (x - length, y, z);
+			ae.Add (new Edge (v1, v2));
+
+			v1 = new Vertex (x - length, y - length, z);
+			ae.Add (new Edge (v1, v2));
+
+			v2 = new Vertex (x, y - length, z);
+			ae.Add (new Edge (v1, v2));
+			s.Add (new Surface (ae));
+			ae = new List<Edge> ();
+
+			//side 3
 			v1 = new Vertex (x - length, y, z - length);
 			v2 = new Vertex (x - length, y - length, z - length);
 			ae.Add (new Edge (v1, v2));
+
+			v2 = new Vertex (x, y, z - length);
+			ae.Add (new Edge (v1, v2));
+
+			v1 = new Vertex (x, y - length, z - length);
+			ae.Add (new Edge (v1, v2));
+
+			v2 = new Vertex (x - length, y - length, z - length);
+			ae.Add (new Edge (v1, v2));
+			s.Add (new Surface (ae));
+			ae = new List<Edge> ();
+
+			//side 4
+			v1 = new Vertex (x - length, y, z - length);
+			v2 = new Vertex (x - length, y - length, z - length);
+			ae.Add (new Edge (v1, v2));
+
+			v2 = new Vertex (x - length, y, z);
+			ae.Add (new Edge (v1, v2));
+
+			v1 = new Vertex (x - length, y - length, z);
+			ae.Add (new Edge (v1, v2));
+
+			v2 = new Vertex (x - length, y - length, z - length);
+			ae.Add (new Edge (v1, v2));
+			s.Add (new Surface (ae));
+			ae = new List<Edge> ();
 
 			//bottom surface
 			v1 = new Vertex(x, y - length, z);
@@ -72,13 +123,15 @@ namespace CIS4800 {
 
 			v2 = new Vertex (x - length, y - length, z);
 			ae.Add (new Edge (v1, v2));
+			s.Add (new Surface (ae));
 
-			return ae;
+			return s;
 
 		}
 
-		private List<Edge> setupEdges_Triangle(int n) {
+		private List<Surface> setupEdges_Triangle(int n) {
 
+			List<Surface> s = new List<Surface> ();
 			List<Edge> ae = new List<Edge> ();
 			double[] const_dimen = { origin.getX () - (length / 2), origin.getX () + (length / 2) };
 
@@ -133,7 +186,7 @@ namespace CIS4800 {
 				}
 			}
 
-			return ae;
+			return s;
 
 		}
 

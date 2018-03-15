@@ -292,7 +292,7 @@ namespace CIS4800 {
 
 		}
 
-		public static Vertex convertVertexToViewPlane(double[,] m, Vertex p) {
+		public static Vertex convertVertexToViewVolume(double[,] m, Vertex p) {
 
 			double retX, retY, retZ;
 
