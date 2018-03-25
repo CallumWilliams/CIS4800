@@ -1,5 +1,0 @@
-/home/clam/Pictures/CIS4800/CIS4800/CIS4800/obj/x86/Debug/.NETFramework,Version=v4.5.AssemblyAttribute.cs
-/home/clam/Pictures/CIS4800/CIS4800/CIS4800/bin/Debug/CIS4800.pdb
-/home/clam/Pictures/CIS4800/CIS4800/CIS4800/bin/Debug/CIS4800.exe
-/home/clam/Pictures/CIS4800/CIS4800/CIS4800/obj/x86/Debug/CIS4800.exe
-/home/clam/Pictures/CIS4800/CIS4800/CIS4800/obj/x86/Debug/CIS4800.pdb

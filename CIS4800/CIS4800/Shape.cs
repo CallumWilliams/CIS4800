@@ -33,10 +33,8 @@ namespace CIS4800 {
 				for (int j = 0; j < e.Count; j++) {
 
 					Edge eNew = (Edge)e [j];
-					Console.WriteLine ("Got (", eNew.getStart ().getX (), ", ", eNew.getStart ().getY (), ", ", eNew.getStart ().getZ (), ") to (", eNew.getEnd ().getX (), ", ", eNew.getEnd ().getY (), ", ", eNew.getEnd ().getZ (), ")");
 					Vertex start = GraphicsMath.convertVertexToViewVolume (matrix, eNew.getStart ());
 					Vertex end = GraphicsMath.convertVertexToViewVolume (matrix, eNew.getEnd ());
-					Console.WriteLine("Drawing (", start.getX() , ", " , start.getY() , ", ", start.getZ() , ") to (" , end.getX() , ", " , end.getY() , ", ", end.getZ(), ")");
 					if (vv.pointIsInVV (start) && vv.pointIsInVV (end)) {
 						start = vv.projectOntoVPWindow (start);
 						end = vv.projectOntoVPWindow (end);
