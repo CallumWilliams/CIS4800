@@ -6,6 +6,7 @@ namespace CIS4800 {
 	public class Shape {
 
 		private List<Surface> surfaces;
+		private Vector Surface;
 
 		public Shape () {
 
