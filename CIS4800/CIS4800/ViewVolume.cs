@@ -14,10 +14,9 @@ namespace CIS4800 {
 
 		public ViewVolume (double dist, double azimuth, double elevation, double d, double f, double h) {
 
-			double retX, retY, retZ;
-			retX = dist * Math.Cos (elevation) * Math.Cos (azimuth);
-			retY = dist * Math.Cos (elevation) * Math.Sin (azimuth);
-			retZ = dist * Math.Sin (elevation);
+			double retX = dist * Math.Cos (elevation) * Math.Cos (azimuth);
+			double retY = dist * Math.Cos (elevation) * Math.Sin (azimuth);
+			double retZ = dist * Math.Sin (elevation);
 
 			this.viewPoint = new Vertex (retX, retY, retZ);
 			this.d = d;
@@ -68,9 +67,9 @@ namespace CIS4800 {
 			double retX, retY, retZ;
 
 			//N x V
-			retX = (N.getY () * V.getZ () - V.getY () * N.getZ ());
-			retY = (N.getZ () * V.getX () - V.getZ () * N.getX ());
-			retZ = (N.getX () * V.getY () - V.getX () * N.getY ());
+			retX = (N.getY () * V.getZ ()) - (V.getY () * N.getZ ());
+			retY = (N.getZ () * V.getX ()) - (V.getZ () * N.getX ());
+			retZ = (N.getX () * V.getY ()) - (V.getX () * N.getY ());
 
 			Vector v = new Vector (retX, retY, retZ);
 			v = GraphicsMath.normalizeVector (v);

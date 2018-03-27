@@ -57,10 +57,10 @@ namespace CIS4800 {
 			s_new = Convert3DToPlane (d.getHeight (), e.getStart (), v);
 			e_new = Convert3DToPlane (d.getHeight (), e.getEnd (), v);
 
-			s_x_img = s_new [0];
-			s_y_img = s_new [1];
-			e_x_img = e_new [0];
-			e_y_img = e_new [1];
+			s_x_img = s_new [1];
+			s_y_img = s_new [0];
+			e_x_img = e_new [1];
+			e_y_img = e_new [0];
 
 			start_x_rast = (int)Math.Round (s_x_img);
 			start_y_rast = (int)Math.Round (s_y_img);
@@ -260,12 +260,13 @@ namespace CIS4800 {
 			matrix [1, 6] = vv.getViewPoint ().getY () * -1;
 			matrix [2, 6] = vv.getViewPoint ().getZ () * -1;
 
-			//get normal
+			//get view of VV
 			vv.computeN(vv.getViewPoint(), w.getOrigin());
 			matrix [0, 2] = vv.getN ().getX ();
 			matrix [1, 2] = vv.getN ().getY ();
 			matrix [2, 2] = vv.getN ().getZ ();
 
+			//get other main vectors of VV
 			vv.computeV (w.getHeight ());
 			vv.computeU ();
 

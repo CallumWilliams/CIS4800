@@ -5,12 +5,22 @@ namespace CIS4800
 {
 	public class Shape {
 
+		private List<Surface> surfaces;
 		private List<Edge> edges;
 
 		public Shape () {
 
+			this.surfaces = new List<Surface> ();
 			edges = new List<Edge> ();
 
+		}
+
+		public List<Surface> getSurfaces () {
+			return this.surfaces;
+		}
+
+		public void setSurfaces (List<Surface> s) {
+			this.surfaces = s;[
 		}
 
 		public List<Edge> getEdges() {
@@ -30,8 +40,8 @@ namespace CIS4800
 				Vertex start = GraphicsMath.convertVertexToViewVolume (matrix, eNew.getStart ());
 				Vertex end = GraphicsMath.convertVertexToViewVolume (matrix, eNew.getEnd ());
 				if (vv.pointInViewVolume (start) && vv.pointInViewVolume (end)) {
-					start = vv.projectOntoVPWindow (start);
-					end = vv.projectOntoVPWindow (end);
+					//start = vv.projectOntoVPWindow (start);
+					//end = vv.projectOntoVPWindow (end);
 					eNew = new Edge (start, end);
 					GraphicsMath.RasterizeEdge (eNew, ref d, vv);
 				}
